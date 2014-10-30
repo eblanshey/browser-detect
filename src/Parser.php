@@ -60,13 +60,13 @@ class Parser {
 	 * @param  \Illuminate\Foundation\Application $app
 	 * @return void
 	 */
-	public function __construct(array $config, array $plugins)
+	public function __construct(array $config = [], array $plugins = [])
 	{
 		// Import the package configuration to the parser object.
-		$this->objectConfigImport($config);
+		$this->objectConfigImport($config ?: require(__DIR__.'/config/config.php'));
 
 		// Import the plugins.
-		$this->pluginCollectionImport($plugins);
+		$this->pluginCollectionImport($plugins ?: require(__DIR__.'/config/plugins.php'));
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Parser {
 	 */
 	public function getEmptyResult()
 	{
-		return $this->app->make('browser-detect.result');
+		return new Result;
 	}
 
 	/**
@@ -97,7 +97,7 @@ class Parser {
 	 */
 	public function visitorUserAgent()
 	{
-		return $this->app['request']->server('HTTP_USER_AGENT', $this->objectConfig['generic']['agent']);
+		return isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : $this->objectConfig['generic']['agent'];
 	}
 
 	/**
@@ -123,19 +123,8 @@ class Parser {
 			return $this->runTimeCacheGet($key);
 		}
 
-		// Only use cache if the interval is not 0.
-		if ($this->objectConfig['cache']['interval']) {
-
-			// Fetch the cached result which we store in compact string format.
-			$cachedResult 	= $this->app['cache']->remember($key, $this->objectConfig['cache']['interval'], function() use ($userAgent) {
-				return $this->parse($userAgent)->toString();
-			});
-
-			// Convert the result back to an object.
-			$result 		= $this->getEmptyResult()->importFromString($cachedResult);
-		} else {
-			$result 		= $this->parse($userAgent);
-		}
+		// Get ua info
+		$result = $this->parse($userAgent);
 
 		// Save the result into the runtime cache.
 		$this->runTimeCacheSet($key, $result);

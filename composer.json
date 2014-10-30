@@ -1,5 +1,5 @@
 {
-    "name": "hisorange/browser-detect",
+    "name": "eblanshey/browser-detect",
     "description": "Browser & Mobile detection package for Laravel 4.",
     "keywords": ["laravel", "user-agent", "browser", "mobile", "tablet", "user agent", "mobile", "tablet", "greenball", "hisorange"],
     "license": "MIT",

@@ -97,7 +97,7 @@ return [
 		 * @var array
 		 */
 		'fake_headers'	=> [
-			'HTTP_FAKE_HEADER' => 'HiSoRange\Browser'
+			'HTTP_FAKE_HEADER' => 'fake'
 		],
 	],
 
