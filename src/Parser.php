@@ -4,7 +4,6 @@ namespace hisorange\BrowserDetect;
 use hisorange\Traits\RunTimeCache;
 use hisorange\Traits\ObjectConfig;
 use hisorange\Traits\PluginCollection;
-use Illuminate\Foundation\Application;
 
 class Parser {
 
@@ -12,13 +11,6 @@ class Parser {
 	 * @since 1.0.0 The package requirements now allows the usage of traits.
 	 */
 	use RunTimeCache, ObjectConfig, PluginCollection;
-
-	/**
-	 * @since 1.0.0 Store the application on the object.
-	 *
-	 * @var \Illuminate\Foundation\Application
-	 */
-	protected $app;
 
 	/**
 	 * Default data schema, this keys are always presents in the result even if the values are unsetted.
@@ -68,16 +60,13 @@ class Parser {
 	 * @param  \Illuminate\Foundation\Application $app
 	 * @return void
 	 */
-	public function __construct(Application $app)
+	public function __construct(array $config, array $plugins)
 	{
-		// Store the application.
-		$this->app 		= $app;
-
 		// Import the package configuration to the parser object.
-		$this->objectConfigImport($this->app['config']['browser-detect::config']);
+		$this->objectConfigImport($config);
 
 		// Import the plugins.
-		$this->pluginCollectionImport($this->app['config']['browser-detect::plugins']);
+		$this->pluginCollectionImport($plugins);
 	}
 
 	/**
